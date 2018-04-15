@@ -37,6 +37,7 @@ class CommentService {
       },
       { headers: HEADER }
     );
+    console.log("parentId: ", data);
     this.axiosComments(data.parentId);
   };
 

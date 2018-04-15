@@ -5,16 +5,18 @@ import { Paper, Typography, Button } from "material-ui";
 
 import VoteBox from "../VoteBox";
 import PostService from "../../services/PostService";
+import { votePost, getPostsAxios } from "../../actions/posts";
 
 class PostListItem extends Component {
   updateScore = vote => {
     const { post } = this.props;
-    PostService.axiosVotePostList(post.id, vote);
+    this.props.votePost(post.id, vote, post.category);
   };
 
   deletePost = () => {
     const { post } = this.props;
-    PostService.axiosDeletePost(post.id);
+    PostService.axiosDeletePost(post);
+    this.props.getPosts(post.category);
   };
 
   render() {
@@ -51,6 +53,9 @@ class PostListItem extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  votePost: (id, option, category) => dispatch(votePost(id, option, category)),
+  getPosts: category => dispatch(getPostsAxios(category))
+});
 
 export default connect(null, mapDispatchToProps)(PostListItem);

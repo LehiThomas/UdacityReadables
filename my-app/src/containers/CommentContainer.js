@@ -46,7 +46,7 @@ class CommentContainer extends Component {
             <CommentListItem
               editComment={this.editComment}
               comment={comment}
-              key={comment + index}
+              key={`${comment} + ${index}`}
             />
           ))}
         </div>

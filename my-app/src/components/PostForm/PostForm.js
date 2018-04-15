@@ -50,7 +50,7 @@ class PostForm extends Component {
 
   createPost = () => {
     if (this.state.edit) {
-      let post = {
+      const post = {
         ...this.props.post,
         title: this.state.title,
         author: this.state.author,

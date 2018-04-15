@@ -3,24 +3,24 @@
 const initialState = {
   fetching: false,
   fetched: false,
-  post: {},
+  posts: [],
   error: null
 };
 
-const PostReducer = (state = initialState, action) => {
+const PostsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "FETCH_POST_PENDING": {
+    case "FETCH_POSTS_PENDING": {
       return { ...state, fetching: true };
     }
-    case "FETCH_POST_FULFILLED": {
+    case "FETCH_POSTS_FULFILLED": {
       return {
         ...state,
         fetching: false,
         fetched: true,
-        post: action.payload
+        posts: action.payload
       };
     }
-    case "FETCH_POST_REJECTED": {
+    case "FETCH_POSTS_REJECTED": {
       return { ...state, fetching: false, error: action.payload };
     }
     default:
@@ -28,4 +28,4 @@ const PostReducer = (state = initialState, action) => {
   }
 };
 
-export default PostReducer;
+export default PostsReducer;

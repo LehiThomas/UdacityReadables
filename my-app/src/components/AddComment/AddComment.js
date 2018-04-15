@@ -4,8 +4,8 @@ import { TextField, Button } from "material-ui";
 import CommentService from "../../services/CommentService";
 
 class AddComment extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
       author: "",
@@ -46,7 +46,7 @@ class AddComment extends Component {
       const comment = {
         author: this.state.author,
         body: this.state.body,
-        parentId: this.props.comment.parentId
+        parentId: this.props.parentId
       };
 
       CommentService.axiosPostComment(comment);

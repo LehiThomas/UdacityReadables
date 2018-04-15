@@ -1,8 +1,7 @@
 import axios from "axios";
-import store from "../config/store";
 import { API, HEADER } from "../config/consts";
-import { getPosts, getPost } from "../actions/posts";
-
+import { getPostsAxios } from "../actions/posts";
+import store from "../config/store";
 import UtilService from "./UtilService";
 
 class PostService {
@@ -13,54 +12,44 @@ class PostService {
     } else {
       url = `${API}/posts`;
     }
-    const res = await axios(url, { headers: HEADER });
-    store.dispatch(getPosts(res.data));
+    return await axios(url, { headers: HEADER });
   };
 
-  axiosPost = async id => {
-    const res = await axios(`${API}/posts/${id}`, { headers: HEADER });
-    store.dispatch(getPost(res.data));
+  axiosPost = id => {
+    return axios(`${API}/posts/${id}`, { headers: HEADER });
   };
 
   axiosVotePost = async (id, option) => {
-    const res = await axios.post(
+    return await axios.post(
       `${API}/posts/${id}`,
       { option: option },
       { headers: HEADER }
     );
-    this.axiosPost(res.data.id);
-  };
-
-  axiosVotePostList = async (id, option) => {
-    await axios.post(
-      `${API}/posts/${id}`,
-      { option: option },
-      { headers: HEADER }
-    );
-    this.axiosPosts();
   };
 
   axiosCreatePost = async post => {
-    await axios.post(
-      `${API}/posts`,
-      {
-        id: UtilService.createUniqueId(),
-        title: post.title,
-        body: post.body,
-        author: post.author,
-        category: post.category,
-        timestamp: Date.now()
-      },
-      { headers: HEADER }
-    );
-    this.axiosPosts();
+    await axios
+      .post(
+        `${API}/posts`,
+        {
+          id: UtilService.createUniqueId(),
+          title: post.title,
+          body: post.body,
+          author: post.author,
+          category: post.category,
+          timestamp: Date.now()
+        },
+        { headers: HEADER }
+      )
+      .then(() => store.dispatch(getPostsAxios(post.category)));
   };
 
-  axiosDeletePost = async id => {
-    await axios.delete(`${API}/posts/${id}`, {
-      headers: HEADER
-    });
-    this.axiosPosts();
+  axiosDeletePost = async post => {
+    await axios
+      .delete(`${API}/posts/${post.id}`, {
+        headers: HEADER
+      })
+      .then(() => store.dispatch(getPostsAxios(post.category)));
   };
 
   axiosEditPost = async post => {
@@ -77,7 +66,7 @@ class PostService {
       },
       { headers: HEADER }
     );
-    this.axiosPosts();
+    getPostsAxios();
   };
 }
 

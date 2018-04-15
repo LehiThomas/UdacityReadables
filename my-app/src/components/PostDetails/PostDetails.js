@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Paper, Typography, Button } from "material-ui";
 
@@ -14,7 +13,7 @@ class PostDetails extends Component {
 
   deletePost = () => {
     const { post } = this.props;
-    PostService.axiosDeletePost(post.id);
+    PostService.axiosDeletePost(post);
     this.props.reroute("");
   };
 
@@ -54,6 +53,4 @@ class PostDetails extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({});
-
-export default connect(null, mapDispatchToProps)(PostDetails);
+export default PostDetails;

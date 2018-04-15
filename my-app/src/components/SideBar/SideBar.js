@@ -18,7 +18,7 @@ class SideBar extends Component {
       return (
         <div>
           {categoryArray.map((category, index) => (
-            <MenuItem key={category + index}>
+            <MenuItem key={`${category} + ${index}`}>
               <Link to={`/${category.name}`}>{category.name}</Link>
             </MenuItem>
           ))}

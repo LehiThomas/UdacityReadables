@@ -10,13 +10,12 @@ import {
 
 import PostListItem from "../components/PostListItem";
 import PostForm from "../components/PostForm";
-
-import PostService from "../services/PostService";
+import { getPostsAxios } from "../actions/posts";
 import UtilService from "../services/UtilService";
 
 class PostListContainer extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
       showForm: false,
@@ -27,13 +26,15 @@ class PostListContainer extends Component {
 
   componentDidMount() {
     const category = this.props.match.params.category;
-    PostService.axiosPosts(category);
+    console.log("cate", this.props.match);
+    this.props.getPosts(category);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.match.params.category !== this.props.match.params.category) {
       const category = nextProps.match.params.category;
-      PostService.axiosPosts(category);
+      console.log("cate", category);
+      this.props.getPosts(category);
     }
   }
 
@@ -53,8 +54,14 @@ class PostListContainer extends Component {
     }
   };
 
-  displayPosts = posts => {
-    if (posts !== undefined) {
+  displayPosts = () => {
+    const postObj = this.props.posts;
+    if (postObj.fetching === true) {
+      return <div>Loading...</div>;
+    }
+    if (postObj.fetching === false && postObj.fetched === true) {
+      let posts = postObj.posts.data;
+      console.log("><><><><", posts);
       posts = this.sortPosts(posts);
       return (
         <div>
@@ -75,7 +82,7 @@ class PostListContainer extends Component {
   };
 
   render() {
-    const { posts } = this.props;
+    console.log("props", this.props);
     return (
       <div style={{ flexGrow: 1 }}>
         <FormGroup row>
@@ -103,7 +110,7 @@ class PostListContainer extends Component {
         </FormGroup>
         <Grid container spacing={24}>
           <Grid item xs={6}>
-            {this.displayPosts(posts)}
+            {this.displayPosts()}
           </Grid>
         </Grid>
         {this.state.showForm ? (
@@ -123,10 +130,12 @@ class PostListContainer extends Component {
   }
 }
 
-const mapStateToProps = ({ postReducer }) => ({
-  posts: postReducer.posts
+const mapStateToProps = ({ postsReducer }) => ({
+  posts: postsReducer
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  getPosts: category => dispatch(getPostsAxios(category))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostListContainer);
