@@ -8,16 +8,13 @@ import { getPostAxios } from "../actions/posts";
 
 class PostDetailContainer extends Component {
   componentDidMount() {
-    console.log("details did mount");
     const id = this.props.match.params.id;
     this.props.getPost(id);
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("details will receive");
     if (nextProps.match.params.id !== this.props.match.params.id) {
       const id = nextProps.match.params.id;
-      console.log("cate", id);
       this.props.getPost(id);
     }
   }
@@ -46,7 +43,6 @@ class PostDetailContainer extends Component {
   };
 
   render() {
-    console.log("props", this.props);
     return <div>{this.renderDetails()}</div>;
   }
 }

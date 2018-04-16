@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "../config/store";
 import { API, HEADER } from "../config/consts";
 import { getComments, getComment } from "../actions/comments";
-
+import { getPostAxios } from "../actions/posts";
 import UtilService from "./UtilService";
 
 class CommentService {
@@ -26,26 +26,27 @@ class CommentService {
   };
 
   axiosPostComment = async data => {
-    await axios.post(
-      `${API}/comments`,
-      {
-        id: UtilService.createUniqueId(),
-        body: data.body,
-        author: data.author,
-        timestamp: Date.now(),
-        parentId: data.parentId
-      },
-      { headers: HEADER }
-    );
-    console.log("parentId: ", data);
-    this.axiosComments(data.parentId);
+    await axios
+      .post(
+        `${API}/comments`,
+        {
+          id: UtilService.createUniqueId(),
+          body: data.body,
+          author: data.author,
+          timestamp: Date.now(),
+          parentId: data.parentId
+        },
+        { headers: HEADER }
+      )
+      .then(() => store.dispatch(getPostAxios(data.parentId)));
   };
 
   axiosDeleteComment = async comment => {
-    await axios.delete(`${API}/comments/${comment.id}`, {
-      headers: HEADER
-    });
-    this.axiosComments(comment.parentId);
+    await axios
+      .delete(`${API}/comments/${comment.id}`, {
+        headers: HEADER
+      })
+      .then(() => store.dispatch(getPostAxios(comment.parentId)));
   };
 
   axiosEditComment = async comment => {

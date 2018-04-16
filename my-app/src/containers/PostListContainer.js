@@ -26,17 +26,23 @@ class PostListContainer extends Component {
 
   componentDidMount() {
     const category = this.props.match.params.category;
-    console.log("cate", this.props.match);
+    this.setCategory(category);
     this.props.getPosts(category);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.match.params.category !== this.props.match.params.category) {
       const category = nextProps.match.params.category;
-      console.log("cate", category);
+      this.setCategory(category);
       this.props.getPosts(category);
     }
   }
+
+  setCategory = category => {
+    this.setState({
+      category
+    });
+  };
 
   handleChange = name => event => {
     this.setState({
@@ -61,12 +67,15 @@ class PostListContainer extends Component {
     }
     if (postObj.fetching === false && postObj.fetched === true) {
       let posts = postObj.posts.data;
-      console.log("><><><><", posts);
       posts = this.sortPosts(posts);
       return (
         <div>
           {posts.map((post, index) => (
-            <PostListItem post={post} key={post + index} />
+            <PostListItem
+              post={post}
+              category={this.state.category}
+              key={post + index}
+            />
           ))}
         </div>
       );
@@ -82,7 +91,6 @@ class PostListContainer extends Component {
   };
 
   render() {
-    console.log("props", this.props);
     return (
       <div style={{ flexGrow: 1 }}>
         <FormGroup row>

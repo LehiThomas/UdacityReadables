@@ -1,19 +1,22 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Paper, Typography, Button } from "material-ui";
 
 import VoteBox from "../VoteBox";
 import PostService from "../../services/PostService";
+import { votePostDetail, getPostsAxios } from "../../actions/posts";
 
 class PostDetails extends Component {
   updateScore = vote => {
     const { post } = this.props;
-    PostService.axiosVotePost(post.id, vote);
+    this.props.votePost(post.id, vote);
   };
 
   deletePost = () => {
     const { post } = this.props;
     PostService.axiosDeletePost(post);
+    this.props.getPosts(post.category);
     this.props.reroute("");
   };
 
@@ -53,4 +56,9 @@ class PostDetails extends Component {
   }
 }
 
-export default PostDetails;
+const mapDispatchToProps = dispatch => ({
+  votePost: (id, option) => dispatch(votePostDetail(id, option)),
+  getPosts: category => dispatch(getPostsAxios(category))
+});
+
+export default connect(null, mapDispatchToProps)(PostDetails);

@@ -10,16 +10,17 @@ import { votePost, getPostsAxios } from "../../actions/posts";
 class PostListItem extends Component {
   updateScore = vote => {
     const { post } = this.props;
-    this.props.votePost(post.id, vote, post.category);
+    this.props.votePost(post.id, vote, this.props.category);
   };
 
   deletePost = () => {
     const { post } = this.props;
     PostService.axiosDeletePost(post);
-    this.props.getPosts(post.category);
+    this.props.getPosts(this.props.category);
   };
 
   render() {
+    console.log("category", this.props);
     const { post } = this.props;
     return (
       <Paper elevation={4} style={{ padding: 15, marginBottom: 20 }}>
